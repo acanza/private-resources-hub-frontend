@@ -17,10 +17,10 @@ export async function getResources(
   idToken: string | null
 ): Promise<ResourcesResponse> {
   const headers = addAuthorizationHeader({}, idToken);
+  const path = `/resources?email=${encodeURIComponent(email)}`;
 
-  return apiRequest<ResourcesResponse>('GET', '/resources', {
+  return apiRequest<ResourcesResponse>('GET', path, {
     headers,
-    body: { email },
   });
 }
 
@@ -64,13 +64,13 @@ export async function getDirectoryItems(
   idToken: string | null
 ): Promise<DirectoryItemsResponse> {
   const headers = addAuthorizationHeader({}, idToken);
+  const path = `/resources/${directoryName}?email=${encodeURIComponent(email)}`;
 
   return apiRequest<DirectoryItemsResponse>(
     'GET',
-    `/resources/${directoryName}`,
+    path,
     {
       headers,
-      body: { email },
     }
   );
 }
