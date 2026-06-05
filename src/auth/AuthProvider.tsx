@@ -1,57 +1,45 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react';
-import { cognitoSignOut, getCognitoUser } from './cognito';
-
-export type AuthContextType = {
-
-  isAuthenticated: boolean;
-  email: string | null;
-  idToken: string | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-};
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
-
-type AuthProviderProps = {
-  children: ReactNode;
-};
+import { useEffect, useState, useRef } from 'react';
+import { cognitoSignOut, getCognitoUser, type CognitoSession } from './cognito';
+import { AuthContext, type AuthProviderProps } from './auth';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
   const [idToken, setIdToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isMountedRef = useRef(true);
 
   // Check if user is already authenticated on mount
   useEffect(() => {
+    isMountedRef.current = true;
     const cognitoUser = getCognitoUser();
     if (cognitoUser) {
-      cognitoUser.getSession((err: Error | null, session: any) => {
-        if (err) {
+      cognitoUser.getSession((err: Error | null, session: CognitoSession | null) => {
+        if (!isMountedRef.current) return;
+        
+        if (err || !session || !session.isValid()) {
           setIsLoading(false);
-        } else if (session && session.isValid()) {
+        } else {
           const token = session.getIdToken().getJwtToken();
-          const userEmail =
-            cognitoUser.getUsername();
+          const userEmail = cognitoUser.getUsername();
           setIdToken(token);
           setEmail(userEmail);
           setIsAuthenticated(true);
           setIsLoading(false);
-        } else {
-          setIsLoading(false);
         }
       });
     } else {
-      setIsLoading(false);
+      // Use queueMicrotask to defer setState and avoid synchronous call in effect
+      queueMicrotask(() => {
+        if (isMountedRef.current) {
+          setIsLoading(false);
+        }
+      });
     }
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {

@@ -2,6 +2,7 @@ import {
   CognitoUserPool,
   CognitoUser,
   AuthenticationDetails,
+  type CognitoUserSession,
 } from 'amazon-cognito-identity-js';
 
 const region = import.meta.env.VITE_COGNITO_REGION;
@@ -26,6 +27,8 @@ export type CognitoLoginResponse = {
   email: string;
 };
 
+export type CognitoSession = CognitoUserSession | null;
+
 export const cognitoLogin = (
   email: string,
   password: string
@@ -42,7 +45,7 @@ export const cognitoLogin = (
     });
 
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result: any) => {
+      onSuccess: (result: CognitoUserSession) => {
         const idToken = result.getIdToken().getJwtToken();
         const accessToken = result.getAccessToken().getJwtToken();
         const refreshToken = result.getRefreshToken().getToken();
@@ -77,7 +80,7 @@ export const getIdToken = async (): Promise<string | null> => {
   if (!cognitoUser) return null;
 
   return new Promise((resolve) => {
-    cognitoUser.getSession((err: Error | null, session: any) => {
+    cognitoUser.getSession((err: Error | null, session: CognitoSession) => {
       if (err) {
         resolve(null);
       } else if (session && session.isValid()) {
