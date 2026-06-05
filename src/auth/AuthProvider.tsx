@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { cognitoSignOut, getCognitoUser, type CognitoSession } from './cognito';
+import { cognitoSignOut, getCognitoUser, getEmailFromIdToken, type CognitoSession } from './cognito';
 import { AuthContext, type AuthProviderProps } from './auth';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setIsLoading(false);
         } else {
           const token = session.getIdToken().getJwtToken();
-          const userEmail = cognitoUser.getUsername();
+          const userEmail = getEmailFromIdToken(token);
           setIdToken(token);
           setEmail(userEmail);
           setIsAuthenticated(true);

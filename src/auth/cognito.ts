@@ -91,3 +91,20 @@ export const getIdToken = async (): Promise<string | null> => {
     });
   });
 };
+
+export const decodeJwt = (token: string): Record<string, unknown> | null => {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    
+    const decoded = atob(parts[1]);
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
+};
+
+export const getEmailFromIdToken = (idToken: string): string | null => {
+  const payload = decodeJwt(idToken);
+  return payload?.email ? String(payload.email) : null;
+};
