@@ -67,13 +67,16 @@ export async function getDirectoryItems(
   idToken: string | null
 ): Promise<DirectoryItemsResponse> {
   const headers = addAuthorizationHeader({}, idToken);
-  const path = `/resources/${directoryName}?email=${encodeURIComponent(email)}`;
+  const path = `/resources/${directoryName}`;
 
   return apiRequest<DirectoryItemsResponse>(
     'GET',
     path,
     {
       headers,
+      body: {
+        email,
+      },
     }
   );
 }

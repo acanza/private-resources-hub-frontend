@@ -434,7 +434,7 @@ Create a protected page at `/resources`.
 Responsibilities:
 
 * Require authenticated user.
-* Fetch resources from `GET /resources`.
+* Fetch resources from `POST /resources`.
 * Render loading state.
 * Render error state.
 * Render empty state.
