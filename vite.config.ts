@@ -7,4 +7,14 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
+  // server: {
+  //   proxy: {
+  //     '/resources': {
+  //       target: 'https://d5fxjgfib5.execute-api.eu-west-3.amazonaws.com',
+  //       changeOrigin: true,
+  //       secure: true,
+  //       rewrite: (path) => path,
+  //     },
+  //   },
+  // },
 })
