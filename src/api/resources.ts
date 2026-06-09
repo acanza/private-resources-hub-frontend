@@ -17,10 +17,13 @@ export async function getResources(
   idToken: string | null
 ): Promise<ResourcesResponse> {
   const headers = addAuthorizationHeader({}, idToken);
-  const path = `/resources?email=${encodeURIComponent(email)}`;
+  const path = '/resources/';
 
-  return apiRequest<ResourcesResponse>('GET', path, {
+  return apiRequest<ResourcesResponse>('POST', path, {
     headers,
+    body: {
+      'email': email,
+    },
   });
 }
 
