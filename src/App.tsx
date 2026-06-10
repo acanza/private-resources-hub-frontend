@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import { LoginPage } from './pages/LoginPage';
+import { ResourcesPage } from './pages/ResourcesPage';
+import { DirectoryPage } from './pages/DirectoryPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
 
@@ -14,10 +16,15 @@ function App() {
             path="/resources"
             element={
               <ProtectedRoute>
-                <div style={{ padding: '2rem', textAlign: 'center' }}>
-                  <h1>Resources</h1>
-                  <p>Resources page coming soon...</p>
-                </div>
+                <ResourcesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resources/:directoryName"
+            element={
+              <ProtectedRoute>
+                <DirectoryPage />
               </ProtectedRoute>
             }
           />
