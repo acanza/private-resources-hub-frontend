@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
   id-token: write
@@ -37,17 +40,20 @@ jobs:
         run: npm run build
 
       - name: Configure AWS credentials via OIDC
+        if: github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-vite-deploy-role
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Sync dist folder to S3
+        if: github.event_name == 'push'
         run: |
           aws s3 sync dist/ s3://${{ env.S3_BUCKET }} \
             --delete
 
       - name: Invalidate CloudFront cache
+        if: github.event_name == 'push'
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
