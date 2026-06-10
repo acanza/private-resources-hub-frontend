@@ -32,11 +32,13 @@ export async function getResources(
  * This endpoint validates the user's permission and sets CloudFront signed cookies.
  *
  * @param directoryName - The name of the directory to access
+ * @param email - The authenticated user's email
  * @param idToken - The Cognito JWT token
  * @returns Promise containing the CloudFront URL and expiration time
  */
 export async function requestDirectoryAccess(
   directoryName: string,
+  email: string,
   idToken: string | null
 ): Promise<DirectoryAccessResponse> {
   const headers = addAuthorizationHeader({}, idToken);
@@ -47,7 +49,9 @@ export async function requestDirectoryAccess(
     {
       headers,
       includeCredentials: true,
-      body: {},
+      body: {
+        email,
+      },
     }
   );
 }
@@ -70,7 +74,7 @@ export async function getDirectoryItems(
   const path = `/resources/${directoryName}`;
 
   return apiRequest<DirectoryItemsResponse>(
-    'GET',
+    'POST',
     path,
     {
       headers,

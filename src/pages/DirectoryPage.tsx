@@ -32,7 +32,7 @@ export const DirectoryPage = () => {
 
         // Step 1: Request access to the directory
         // This endpoint validates permissions and sets CloudFront signed cookies
-        await requestDirectoryAccess(directoryName, idToken);
+        await requestDirectoryAccess(directoryName, email, idToken);
 
         // Step 2: Fetch directory items
         // Only called after access is granted
