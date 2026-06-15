@@ -37,7 +37,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate build environment
+        env:
+          VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_CLIENT_ID: ${{ vars.VITE_COGNITO_CLIENT_ID }}
+        run: |
+          test -n "$VITE_COGNITO_USER_POOL_ID" || {
+            echo "::error::VITE_COGNITO_USER_POOL_ID is not configured"
+            exit 1
+          }
+
+          test -n "$VITE_COGNITO_CLIENT_ID" || {
+            echo "::error::VITE_COGNITO_CLIENT_ID is not configured"
+            exit 1
+          }
+
       - name: Build Vite app
+        env:
+          VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_CLIENT_ID: ${{ vars.VITE_COGNITO_CLIENT_ID }}
         run: npm run build
 
       - name: Configure AWS credentials via OIDC
