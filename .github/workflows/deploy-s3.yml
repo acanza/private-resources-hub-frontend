@@ -2,11 +2,11 @@ name: Deploy Private Resources Hub app to S3 and CloudFront
 
 on:
   workflow_dispatch:
-    workflow_run:
-      workflows: ["CI"]
-      branches: ["main"]
-      types:
-        - completed
+  workflow_run:
+    workflows: ["CI"]
+    branches: ["main"]
+    types:
+      - completed
 
 permissions:
   id-token: write
