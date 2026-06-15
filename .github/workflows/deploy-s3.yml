@@ -41,6 +41,8 @@ jobs:
         env:
           VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_CLIENT_ID: ${{ vars.VITE_COGNITO_CLIENT_ID }}
+          VITE_COGNITO_REGION: ${{ vars.VITE_COGNITO_REGION }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
         run: |
           test -n "$VITE_COGNITO_USER_POOL_ID" || {
             echo "::error::VITE_COGNITO_USER_POOL_ID is not configured"
