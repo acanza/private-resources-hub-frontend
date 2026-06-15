@@ -43,7 +43,7 @@ jobs:
         if: github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-vite-deploy-role
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/private-resources-hub-dev-github-actions
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Sync dist folder to S3
