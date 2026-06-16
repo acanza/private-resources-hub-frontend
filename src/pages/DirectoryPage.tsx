@@ -16,6 +16,14 @@ export const DirectoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [forbidden, setForbidden] = useState(false);
+  const [formattedDirectoryName, setFormattedDirectoryName] = useState<string | null>(null);
+
+  // Format the directory name for display (replace hyphens with spaces and capitalize)
+  if (directoryName && !formattedDirectoryName) {
+    let formattedName = directoryName.replace(/-/g, ' ');
+    formattedName = formattedName.slice(0, 1).toUpperCase() + formattedName.slice(1);
+    setFormattedDirectoryName(formattedName);
+  }
 
   useEffect(() => {
     const fetchDirectoryContent = async () => {
@@ -83,8 +91,8 @@ export const DirectoryPage = () => {
             ← Volver
           </button>
           <h1>
-            {directoryName
-              ? `Directorio: ${directoryName}`
+            {formattedDirectoryName
+              ? `${formattedDirectoryName}`
               : 'Cargando...'}
           </h1>
         </div>
